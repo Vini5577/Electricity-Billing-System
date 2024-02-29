@@ -21,6 +21,8 @@ public class Splash extends JFrame {
         try {
             Thread.sleep(3000);
             setVisible(false);
+
+            new Login();
         } catch (Exception e) {
             e.printStackTrace();
         }
