@@ -26,6 +26,8 @@ public class Splash extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     public static void main(String[] args) {
