@@ -43,6 +43,13 @@ public class main_class extends JFrame {
         depositdetails.setIcon(new ImageIcon(depositdetailsImage));
         menu.add(depositdetails);
 
+        JMenuItem calculatebill = new JMenuItem("Calculate Bill");
+        calculatebill.setFont(new Font("monospaced", Font.PLAIN, 14));
+        ImageIcon calculatebillImg = new ImageIcon(ClassLoader.getSystemResource("icon/calculatorbills.png"));
+        Image calculatebillImage = calculatebillImg.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+        calculatebill.setIcon(new ImageIcon(calculatebillImage));
+        menu.add(calculatebill);
+
         setLayout(new FlowLayout());
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
