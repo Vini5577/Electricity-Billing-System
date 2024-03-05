@@ -33,7 +33,7 @@ public class Signup extends JFrame implements ActionListener {
 
         meterText = new TextField();
         meterText.setBounds(170, 100, 125, 20);
-        meterNo.setVisible(false);
+        meterText.setVisible(false);
         add(meterText);
 
         JLabel Employer = new JLabel("Employer ID");
@@ -58,7 +58,7 @@ public class Signup extends JFrame implements ActionListener {
         name.setBounds(30, 180, 125, 20);
         add(name);
 
-        nameText = new TextField();
+        nameText = new TextField("");
         nameText.setBounds(170, 180, 125, 20);
         add(nameText);
 
@@ -119,7 +119,27 @@ public class Signup extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == create) {
-            // //
+            String sloginAs = loginASCho.getSelectedItem();
+            String susername = userNameText.getText();
+            String sname = nameText.getText();
+            String spassword = passwordText.getText();
+            String smeter = meterText.getText();
+            try {
+                database c = new database();
+                String query = null;
+                query = "insert into Signup value('" + smeter + "', '" + susername + "', '" + sname + "','" + spassword
+                        + "','" + sloginAs + "')";
+
+                c.statement.executeUpdate(query);
+
+                JOptionPane.showMessageDialog(null, "Account Created");
+                setVisible(false);
+                new Login();
+
+            } catch (Exception E) {
+                E.printStackTrace();
+            }
+
         } else if (e.getSource() == back) {
             setVisible(false);
             new Login();
