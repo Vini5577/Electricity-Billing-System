@@ -50,6 +50,24 @@ public class main_class extends JFrame {
         calculatebill.setIcon(new ImageIcon(calculatebillImage));
         menu.add(calculatebill);
 
+        JMenu info = new JMenu("Information");
+        info.setFont(new Font("serif", Font.PLAIN, 15));
+        menuBar.add(info);
+
+        JMenuItem upinfo = new JMenuItem("Update Information");
+        upinfo.setFont(new Font("monospaced", Font.PLAIN, 14));
+        ImageIcon upinfoImg = new ImageIcon(ClassLoader.getSystemResource("icon/refresh.png"));
+        Image upinfoImage = upinfoImg.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+        upinfo.setIcon(new ImageIcon(upinfoImage));
+        info.add(upinfo);
+
+        JMenuItem viewInfo = new JMenuItem("View Information");
+        viewInfo.setFont(new Font("monospaced", Font.PLAIN, 14));
+        ImageIcon viewInfoImg = new ImageIcon(ClassLoader.getSystemResource("icon/information.png"));
+        Image viewInfoImage = viewInfoImg.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+        viewInfo.setIcon(new ImageIcon(viewInfoImage));
+        info.add(viewInfo);
+
         setLayout(new FlowLayout());
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
