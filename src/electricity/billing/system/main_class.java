@@ -1,6 +1,5 @@
 package electricity.billing.system;
 
-import javax.management.JMException;
 import javax.swing.*;
 import java.awt.*;
 
@@ -133,7 +132,7 @@ public class main_class extends JFrame {
     }
 
     // public static void main(String[] args) {
-    //     new main_class();
+    // new main_class();
     // }
 
 }
