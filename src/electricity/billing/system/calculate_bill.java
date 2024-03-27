@@ -143,7 +143,6 @@ public class calculate_bill extends JFrame implements ActionListener {
         setSize(650, 400);
         setLocation(400, 200);
         setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     @Override

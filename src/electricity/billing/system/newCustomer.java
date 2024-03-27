@@ -110,8 +110,6 @@ public class newCustomer extends JFrame implements ActionListener {
         JLabel imgLable = new JLabel(i3);
         add(imgLable, "West");
         setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-
     }
 
     @Override

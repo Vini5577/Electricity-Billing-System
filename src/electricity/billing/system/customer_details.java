@@ -92,7 +92,6 @@ public class customer_details extends JFrame implements ActionListener {
         add(close);
 
         setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     @Override
