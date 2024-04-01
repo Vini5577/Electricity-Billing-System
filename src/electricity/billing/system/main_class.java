@@ -166,6 +166,29 @@ public class main_class extends JFrame implements ActionListener {
             new calculate_bill();
         } else if (msg.equals("View Information")) {
             new view_information(meter_pass);
+        } else if (msg.equals("Update Information")) {
+            new update_information(meter_pass);
+        } else if (msg.equals("Bill Details")) {
+
+        } else if (msg.equals("Calculator")) {
+            try {
+                Runtime.getRuntime().exec("calc.exe");
+            } catch (Exception E) {
+                E.printStackTrace();
+            }
+        } else if (msg.equals("Notepad")) {
+            try {
+                Runtime.getRuntime().exec("notepad.exe");
+            } catch (Exception E) {
+                E.printStackTrace();
+            }
+        } else if (msg.equals("Exit")) {
+            setVisible(false);
+            new Login();
+        } else if (msg.equals("Pay Bill")) {
+
+        } else if (msg.equals("Generate Bill")) {
+
         }
     }
 
