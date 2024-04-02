@@ -99,6 +99,7 @@ public class update_information extends JFrame implements ActionListener {
         update = new JButton("Update");
         update.setBackground(new Color(33, 106, 145));
         update.setForeground(Color.white);
+        update.setBounds(50, 360, 120, 25);
         update.addActionListener(this);
         add(update);
 
@@ -117,6 +118,7 @@ public class update_information extends JFrame implements ActionListener {
         add(imgLabel);
 
         setVisible(true);
+        setSize(700, 450);
     }
 
     @Override
@@ -143,4 +145,8 @@ public class update_information extends JFrame implements ActionListener {
             setVisible(false);
         }
     }
+
+    /*public static void main(String[] args) {
+        new update_information("");
+    }*/
 }

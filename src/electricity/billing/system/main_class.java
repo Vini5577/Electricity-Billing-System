@@ -169,7 +169,7 @@ public class main_class extends JFrame implements ActionListener {
         } else if (msg.equals("Update Information")) {
             new update_information(meter_pass);
         } else if (msg.equals("Bill Details")) {
-
+            new bill_details(meter_pass);
         } else if (msg.equals("Calculator")) {
             try {
                 Runtime.getRuntime().exec("calc.exe");
@@ -190,6 +190,8 @@ public class main_class extends JFrame implements ActionListener {
         } else if (msg.equals("Generate Bill")) {
 
         }
+
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     // public static void main(String[] args) {
