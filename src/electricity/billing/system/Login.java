@@ -8,7 +8,8 @@ import java.sql.ResultSet;
 
 public class Login extends JFrame implements ActionListener {
 
-    JTextField userText, passwordText;
+    JTextField userText;
+    JPasswordField passwordText;
     Choice loginChoice;
     JButton loginButton, cancelButton, signupButton;
 
@@ -27,7 +28,7 @@ public class Login extends JFrame implements ActionListener {
         password.setBounds(300, 100, 100, 20);
         add(password);
 
-        passwordText = new JTextField();
+        passwordText = new JPasswordField();
         passwordText.setBounds(400, 100, 150, 20);
         add(passwordText);
 

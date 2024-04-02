@@ -12,7 +12,8 @@ import java.sql.ResultSet;
 
 public class Signup extends JFrame implements ActionListener {
     Choice loginASCho;
-    TextField meterText, EmployerText, userNameText, nameText, passwordText;
+    TextField meterText, EmployerText, userNameText, nameText;
+    JPasswordField passwordText;
     JButton create, back;
 
     Signup() {
@@ -91,7 +92,7 @@ public class Signup extends JFrame implements ActionListener {
         password.setBounds(30, 220, 125, 20);
         add(password);
 
-        passwordText = new TextField();
+        passwordText = new JPasswordField();
         passwordText.setBounds(170, 220, 125, 20);
         add(passwordText);
 
