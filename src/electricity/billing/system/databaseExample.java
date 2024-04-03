@@ -9,9 +9,7 @@ public class databaseExample {
 
     databaseExample() {
         try {
-            // connection = DriverManager.getConnection("jdbc:mysql://URL_DATABASE",//
-            // USER_DB,
-            // PASSWORD_DB);
+            // connection = DriverManager.getConnection("jdbc:mysql://URL_DATABASE", USER_DB, PASSWORD_DB);
             statement = connection.createStatement();
         } catch (Exception e) {
             e.printStackTrace();
