@@ -5,6 +5,7 @@ import net.proteanit.sql.DbUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class bill_details extends JFrame {
@@ -22,8 +23,10 @@ public class bill_details extends JFrame {
 
         try {
             database c = new database();
-            String query_bill = "select * from bill where meter_no = '"+ meter +"'";
-            ResultSet resultSet = c.statement.executeQuery(query_bill);
+            String query_bill = "select * from bill where meter_no = ?";
+            PreparedStatement co = c.connection.prepareStatement(query_bill);
+            co.setString(1, meter);
+            ResultSet resultSet = co.executeQuery();
             table.setModel(DbUtils.resultSetToTableModel(resultSet));
 
         }catch (Exception e) {

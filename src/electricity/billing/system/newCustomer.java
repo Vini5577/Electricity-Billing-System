@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
 import java.util.Random;
 
 public class newCustomer extends JFrame implements ActionListener {
@@ -112,26 +113,44 @@ public class newCustomer extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    public boolean isNumeric(String str) {
+        return str != null && str.matches("-?\\d+(\\.\\d+)?");
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == next) {
             String sname = nameText.getText();
-            String smeter = meternumText.getText();
+            String smeter = meternumText.getText().trim();
             String saddreess = addressText.getText();
             String scity = cityText.getText();
             String sstate = stateText.getText();
             String eemail = emailText.getText();
             String sphone = phoneText.getText();
 
-            String query_customer = "insert into new_customer values('" + sname + "', '" + smeter + "', '" + saddreess
-                    + "', '" + scity + "', '" + sstate + "', '" + eemail + "', '" + sphone + "')";
+            String query_customer = "insert into new_customer values( ?, ?, ?, ?, ?, ?, ?)";
 
-            String query_signup = "insert into Signup values('" + smeter + "', '', '" + sname + "', '','')";
-
+            String query_signup = "insert into Signup values(?, '', ?, '','')";
+            if(!isNumeric(sphone)) {
+                JOptionPane.showMessageDialog(null, "phone is only numbers");
+                return;
+            }
             try {
                 database c = new database();
-                c.statement.executeUpdate(query_customer);
-                c.statement.executeUpdate(query_signup);
+                PreparedStatement co = c.connection.prepareStatement(query_customer);
+                co.setString(1, sname);
+                co.setString(2, smeter);
+                co.setString(3, saddreess);
+                co.setString(4, scity);
+                co.setString(5, sstate);
+                co.setString(6, eemail);
+                co.setString(7, sphone);
+                co.executeUpdate();
+
+                co = c.connection.prepareStatement(query_signup);
+                co.setString(1, smeter);
+                co.setString(2, sname);
+                co.executeUpdate();
 
                 JOptionPane.showMessageDialog(null, "Customer Details added successfully");
                 setVisible(false);

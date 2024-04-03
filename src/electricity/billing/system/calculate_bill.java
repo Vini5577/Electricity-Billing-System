@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class calculate_bill extends JFrame implements ActionListener {
@@ -63,8 +64,10 @@ public class calculate_bill extends JFrame implements ActionListener {
 
         try {
             database c = new database();
-            ResultSet resultSet = c.statement.executeQuery(
-                    "select * from new_customer where meter_no = '" + meternumCho.getSelectedItem() + "'");
+            String query = "select * from new_customer where meter_no = ?";
+            PreparedStatement co = c.connection.prepareStatement(query);
+            co.setString(1, meternumCho.getSelectedItem());
+            ResultSet resultSet = co.executeQuery();
             while (resultSet.next()) {
                 nameText.setText(resultSet.getString("name"));
                 addressText.setText(resultSet.getString("address"));
@@ -78,8 +81,10 @@ public class calculate_bill extends JFrame implements ActionListener {
             public void itemStateChanged(ItemEvent e) {
                 try {
                     database c = new database();
-                    ResultSet resultSet = c.statement.executeQuery(
-                            "select * from new_customer where meter_no = '" + meternumCho.getSelectedItem() + "'");
+                    String query = "select * from new_customer where meter_no = ?";
+                    PreparedStatement co = c.connection.prepareStatement(query);
+                    co.setString(1, meternumCho.getSelectedItem());
+                    ResultSet resultSet = co.executeQuery();
                     while (resultSet.next()) {
                         nameText.setText(resultSet.getString("name"));
                         addressText.setText(resultSet.getString("address"));
@@ -171,11 +176,15 @@ public class calculate_bill extends JFrame implements ActionListener {
                 E.printStackTrace();
             }
 
-            String query_total_bill = "insert into bill value('" + smeterNo + "', '" + smonth + "', '" + sunit + "', '"
-                    + totalBill + "', 'Not Paid')";
+            String query_total_bill = "insert into bill value(?, ?, ?, ?, 'Not Paid')";
             try {
                 database c = new database();
-                c.statement.executeUpdate(query_total_bill);
+                PreparedStatement co = c.connection.prepareStatement(query_total_bill);
+                co.setString(1, smeterNo);
+                co.setString(2, smonth);
+                co.setString(3, sunit);
+                co.setInt(4, totalBill);
+                co.executeUpdate();
 
                 JOptionPane.showMessageDialog(null, "Customer Bill Updated Successfully");
                 setVisible(false);
@@ -188,7 +197,4 @@ public class calculate_bill extends JFrame implements ActionListener {
         }
     }
 
-    public static void main(String[] args) {
-        new calculate_bill();
-    }
 }

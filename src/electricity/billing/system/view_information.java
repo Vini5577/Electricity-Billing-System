@@ -2,6 +2,7 @@ package electricity.billing.system;
 
 import javax.swing.*;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import java.awt.*;
@@ -81,8 +82,10 @@ public class view_information extends JFrame implements ActionListener {
 
         try {
             database c = new database();
-            ResultSet resultSet = c.statement
-                    .executeQuery("select * from new_customer where meter_no = '" + view + "'");
+            String query = "select * from new_customer where meter_no = ?";
+            PreparedStatement co = c.connection.prepareStatement(query);
+            co.setString(1, view);
+            ResultSet resultSet = co.executeQuery();
             if (resultSet.next()) {
                 nameLabelText.setText(resultSet.getString("name"));
                 meternoText.setText(resultSet.getString("meter_no"));

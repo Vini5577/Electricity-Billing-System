@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
 
 public class meterInfo extends JFrame implements ActionListener {
 
@@ -110,7 +111,6 @@ public class meterInfo extends JFrame implements ActionListener {
         setSize(700, 500);
         setLocation(400, 200);
         setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     @Override
@@ -123,12 +123,18 @@ public class meterInfo extends JFrame implements ActionListener {
             String sbillTyp = billTypeCho.getSelectedItem();
             String sday = "30";
 
-            String query_meterInfo = "insert into meter_info values ('" + smeterNum + "', '" + smeterLoc + "', '"
-                    + smeterTyp + "', '" + sphaseCode + "', '" + sbillTyp + "', '" + sday + "')";
+            String query_meterInfo = "insert into meter_info values ( ?, ?, ?, ?, ?, ?)";
 
             try {
                 database c = new database();
-                c.statement.executeUpdate(query_meterInfo);
+                PreparedStatement co = c.connection.prepareStatement(query_meterInfo);
+                co.setString(1, smeterNum);
+                co.setString(2, smeterLoc);
+                co.setString(3, smeterTyp);
+                co.setString(4, sphaseCode);
+                co.setString(5, sbillTyp);
+                co.setString(6, sday);
+                co.executeUpdate();
 
                 JOptionPane.showMessageDialog(null, "Meter Information Submited Successfully");
                 setVisible(false);

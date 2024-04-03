@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class generate_bill extends JFrame implements ActionListener {
@@ -62,7 +63,11 @@ public class generate_bill extends JFrame implements ActionListener {
             database c = new database();
             String smonth =  searchmonthcho.getSelectedItem();
             area.setText("\n Power Limited \n Electricity Bill For Month of "+smonth+",2023\n\n\n");
-            ResultSet resultSet = c.statement.executeQuery("select * from new_customer where meter_no ='"+meter+"'");
+            String query = null;
+            query = "select * from new_customer where meter_no = ?";
+            PreparedStatement co = c.connection.prepareStatement(query);
+            co.setString(1, meter);
+            ResultSet resultSet = co.executeQuery();
             if (resultSet.next()){
                 area.append("\n    Customer Name        : "+resultSet.getString("name"));
                 area.append("\n    Customer Meter Number: "+resultSet.getString("meter_no"));
@@ -74,7 +79,10 @@ public class generate_bill extends JFrame implements ActionListener {
 
             }
 
-            resultSet = c.statement.executeQuery("select * from meter_info where meter_number ='"+meter+"'");
+            query = "select * from meter_info where meter_number = ?";
+            co = c.connection.prepareStatement(query);
+            co.setString(1, meter);
+            resultSet = co.executeQuery();
             if (resultSet.next()){
                 area.append("\n    Customer Meter Location        : "+resultSet.getString("meter_location"));
                 area.append("\n    Customer Meter Type: "+resultSet.getString("meter_type"));
@@ -94,7 +102,11 @@ public class generate_bill extends JFrame implements ActionListener {
                 area.append("\n   Fixed Tax     : "+resultSet.getString("fixed_tax"));
 
             }
-            resultSet = c.statement.executeQuery("select * from bill where meter_no = '"+meter+"' and month = '"+searchmonthcho.getSelectedItem()+"'");
+            query = "select * from bill where meter_no = ? and month = ?";
+            co = c.connection.prepareStatement(query);
+            co.setString(1, meter);
+            co.setString(2, searchmonthcho.getSelectedItem());
+            resultSet = co.executeQuery();
             if (resultSet.next()) {
                 area.append("\n    Current Month       : " + resultSet.getString("month"));
                 area.append("\n   Units Consumed: " + resultSet.getString("unit"));
@@ -109,7 +121,7 @@ public class generate_bill extends JFrame implements ActionListener {
 
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         new generate_bill("123456");
-    }
+    }*/
 }

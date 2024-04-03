@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class update_information extends JFrame implements ActionListener {
@@ -132,9 +133,19 @@ public class update_information extends JFrame implements ActionListener {
 
             try {
                 database c = new database();
-                c.statement.executeUpdate("update new_customer set address ='" + saddress + "', city = '" + scity
+                /*c.statement.executeUpdate("update new_customer set address ='" + saddress + "', city = '" + scity
                         + "', state = '" + sstate + "', email = '" + semail + "', phone_no ='" + sphone
-                        + "' where meter_no = '" + meter + "'");
+                        + "' where meter_no = '" + meter + "'");*/
+                String query = "update new_customer set address = ?, city = ?, state = ?, email = ?, phone_no = ? where meter_no = ?";
+                PreparedStatement co = c.connection.prepareStatement(query);
+
+                co.setString(1, saddress);
+                co.setString(2, scity);
+                co.setString(3, sstate);
+                co.setString(4, semail);
+                co.setString(5, sphone);
+                co.setString(6, meter);
+                co.executeUpdate();
 
                 JOptionPane.showMessageDialog(null, "User Information updated Successfully");
                 setVisible(false);

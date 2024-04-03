@@ -2,10 +2,8 @@ package electricity.billing.system;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class pay_bill extends JFrame implements ActionListener {
@@ -98,23 +96,64 @@ public class pay_bill extends JFrame implements ActionListener {
             e.printStackTrace();
         }
 
+
+        try{
+            database c = new database();
+            String query = "select * from bill where meter_no = ? and month = ?";
+            PreparedStatement co = c.connection.prepareStatement(query);
+            co.setString(1, meter);
+            co.setString(2, searchmonthCho.getSelectedItem());
+            co.executeQuery();
+            ResultSet resultSet = co.executeQuery();
+            while(resultSet.next()) {
+                unitText.setText(resultSet.getString("unit"));
+                totalBillText.setText(resultSet.getString("total_bill"));
+                statusText.setText(resultSet.getString("status"));
+                if(statusText.getText().equalsIgnoreCase("Paid")) {
+                    statusText.setForeground(Color.green);
+                } else {
+                    statusText.setForeground(Color.red);
+                }
+            }
+        } catch (Exception E) {
+            E.printStackTrace();
+        }
+
+
         searchmonthCho.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                database c = new database();
-
                 try{
-                    ResultSet resultSet = c.statement.executeQuery("select * from bill where meter_no = '"+meter+"' and month = '"+searchmonthCho.getSelectedItem()+"'");
-                    while(resultSet.next()) {
+                    database c = new database();
+                    String query = "select * from bill where meter_no = ? and month = ?";
+                    PreparedStatement co = c.connection.prepareStatement(query);
+                    co.setString(1, meter);
+                    co.setString(2, searchmonthCho.getSelectedItem());
+                    co.executeQuery();
+                    ResultSet resultSet = co.executeQuery();
+                    boolean found = false;
+
+                    while (resultSet.next()) {
+                        found = true;
                         unitText.setText(resultSet.getString("unit"));
                         totalBillText.setText(resultSet.getString("total_bill"));
                         statusText.setText(resultSet.getString("status"));
-                        if(statusText.getText().equalsIgnoreCase("Paid")) {
+                        if (statusText.getText().equalsIgnoreCase("Paid")) {
                             statusText.setForeground(Color.green);
                         } else {
                             statusText.setForeground(Color.red);
                         }
                     }
+
+
+                    if(!found) {
+                        unitText.setText("");
+                        totalBillText.setText("");
+                        statusText.setText("");
+                        statusText.setForeground(Color.red);
+                        statusText.setText("Not Paid!");
+                    }
+
                 } catch (Exception E) {
                     E.printStackTrace();
                 }
@@ -143,7 +182,11 @@ public class pay_bill extends JFrame implements ActionListener {
         if(e.getSource() == pay) {
             try {
                 database c = new database();
-                c.statement.executeUpdate("update bill set status = 'Paid' where meter_no = '"+ meter +"' and month = '"+searchmonthCho.getSelectedItem()+"'");
+                String query = "update bill set status = 'Paid' where meter_no = ? and month = ?";
+                PreparedStatement co = c.connection.prepareStatement(query);
+                co.setString(1, meter);
+                co.setString(2, searchmonthCho.getSelectedItem());
+                co.executeUpdate();
             } catch (Exception E) {
                 E.printStackTrace();
             }

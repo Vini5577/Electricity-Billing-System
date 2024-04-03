@@ -1,9 +1,12 @@
 package electricity.billing.system;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class Login extends JFrame implements ActionListener {
@@ -76,19 +79,30 @@ public class Login extends JFrame implements ActionListener {
 
         if (e.getSource() == loginButton) {
             String susername = userText.getText();
-            String spassword = passwordText.getText();
+            String spassword = String.valueOf(passwordText.getPassword());
+            String hashPasword = BCrypt.withDefaults().hashToString(12, spassword.toCharArray());
             String suser = loginChoice.getSelectedItem();
+
 
             try {
                 database c = new database();
-                String queryy = "select * from Signup where username = '" + susername + "' and password = '" + spassword
-                        + "' and usertype ='" + suser + "'";
-                ResultSet resultSet = c.statement.executeQuery(queryy);
 
-                if (resultSet.next()) {
-                    String meter = resultSet.getString("meter_no");
-                    setVisible(false);
-                    new main_class(suser, meter);
+                String query = "select * from Signup where username = ? and usertype = ?";
+                PreparedStatement co = c.connection.prepareStatement(query);
+                co.setString(1, susername);
+                co.setString(2, suser);
+                ResultSet resultSet = co.executeQuery();
+
+                if(resultSet.next()) {
+                    BCrypt.Result result = BCrypt.verifyer().verify(spassword.toCharArray(), resultSet.getString("password"));
+                    if(result.verified) {
+                        String meter = resultSet.getString("meter_no");
+
+                        setVisible(false);
+                        new main_class(suser, meter);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid Login");
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid Login");
                 }
@@ -104,8 +118,4 @@ public class Login extends JFrame implements ActionListener {
         }
 
     }
-
-    // public static void main(String[] args) {
-    // new Login();
-    // }
 }

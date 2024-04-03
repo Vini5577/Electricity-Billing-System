@@ -1,13 +1,11 @@
 package electricity.billing.system;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class Signup extends JFrame implements ActionListener {
@@ -75,18 +73,22 @@ public class Signup extends JFrame implements ActionListener {
 
             @Override
             public void focusLost(FocusEvent e) {
-                try {
+                try{
                     database c = new database();
-                    ResultSet resultSet = c.statement
-                            .executeQuery("select * from Signup  where meter_no = '" + meterText.getText() + "'");
-                    if (resultSet.next()) {
+                    String query = "select * from signup where meter_no = ? and usertype = ''";
+                    PreparedStatement co = c.connection.prepareStatement(query);
+                    co.setString(1, meterText.getText());
+                    ResultSet resultSet = co.executeQuery();
+                    if (resultSet.next()){
                         nameText.setText(resultSet.getString("name"));
                     }
-                } catch (Exception E) {
+
+                }catch (Exception E){
                     E.printStackTrace();
                 }
             }
         });
+
 
         JLabel password = new JLabel("Password");
         password.setBounds(30, 220, 125, 20);
@@ -102,8 +104,8 @@ public class Signup extends JFrame implements ActionListener {
                 String user = loginASCho.getSelectedItem();
                 if (user.equals("Customer")) {
                     Employer.setVisible(false);
-                    nameText.setEditable(false);
                     EmployerText.setVisible(false);
+                    nameText.setEditable(false);
                     meterNo.setVisible(true);
                     meterText.setVisible(true);
                 } else {
@@ -144,30 +146,57 @@ public class Signup extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
+    public boolean isNumeric(String str) {
+        return str != null && str.matches("-?\\d+(\\.\\d+)?");
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == create) {
             String sloginAs = loginASCho.getSelectedItem();
             String susername = userNameText.getText();
             String sname = nameText.getText();
-            String spassword = passwordText.getText();
+            String spassword = String.valueOf(passwordText.getPassword());
+            String hashPasword = BCrypt.withDefaults().hashToString(12, spassword.toCharArray());
             String smeter = meterText.getText();
+
             try {
                 database c = new database();
+                PreparedStatement co;
                 String query = null;
-                if (sloginAs.equals("Admin")) {
-                    query = "insert into Signup value('" + smeter + "', '" + susername + "', '" + sname + "','"
-                            + spassword + "','" + sloginAs + "')";
+                if(sname.equals("") || susername.equals("") || smeter.equals("")) {
+                    JOptionPane.showMessageDialog(null, "All fields cannot be empty!!");
+                } else if(spassword.length() < 6 || spassword.length() > 10){
+                    JOptionPane.showMessageDialog(null, "Password must be at least 6 characters and less than 12 characters");
+                } else if(!isNumeric(smeter)) {
+                    JOptionPane.showMessageDialog(null, "meter is only numbers");
                 } else {
-                    query = "update Signup set username = '" + susername + "', password = '" + spassword
-                            + "', usertype = '" + sloginAs + "' where meter_no = '" + smeter + "'";
+                    if (sloginAs.equals("Admin")) {
+                        query = "insert into Signup value(?, ?, ?, ?, ?, ?)";
+                        co = c.connection.prepareStatement(query);
+                        co.setString(1, smeter);
+                        co.setString(2, susername);
+                        co.setString(3, sname);
+                        co.setString(4, hashPasword);
+                        co.setString(5, sloginAs);
+                        co.executeUpdate();
+                    } else {
+                            query = "update Signup set username = ?, password = ?, usertype = ? where meter_no = ?";
+
+                            co = c.connection.prepareStatement(query);
+                            co.setString(1, susername);
+                            co.setString(2, hashPasword);
+                            co.setString(3, sloginAs);
+                            co.setString(4, smeter);
+                            co.executeUpdate();
+
+                    }
+
+
+                    JOptionPane.showMessageDialog(null, "Account Created");
+                    setVisible(false);
+                    new Login();
                 }
-
-                c.statement.executeUpdate(query);
-
-                JOptionPane.showMessageDialog(null, "Account Created");
-                setVisible(false);
-                new Login();
 
             } catch (Exception E) {
                 E.printStackTrace();
@@ -178,9 +207,4 @@ public class Signup extends JFrame implements ActionListener {
             new Login();
         }
     }
-
-    // public static void main(String[] args) {
-
-    // new Signup();
-    // }
 }

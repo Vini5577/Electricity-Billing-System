@@ -7,6 +7,7 @@ import net.proteanit.sql.DbUtils;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class deposit_details extends JFrame implements ActionListener {
@@ -100,11 +101,13 @@ public class deposit_details extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == search) {
-            String query_search = "select * from bill where meter_no = '" + searchMeterCho.getSelectedItem()
-                    + "' and month = '" + searchMonthCho.getSelectedItem() + "'";
+            String query_search = "select * from bill where meter_no = ? and month = ?";
             try {
                 database c = new database();
-                ResultSet resultSet = c.statement.executeQuery(query_search);
+                PreparedStatement co = c.connection.prepareStatement(query_search);
+                co.setString(1, searchMeterCho.getSelectedItem());
+                co.setString(2, searchMonthCho.getSelectedItem());
+                ResultSet resultSet = co.executeQuery();
                 table.setModel(DbUtils.resultSetToTableModel(resultSet));
             } catch (Exception E) {
                 E.printStackTrace();

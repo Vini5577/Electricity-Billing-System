@@ -42,7 +42,7 @@ public class payment_bill extends JFrame implements ActionListener {
         new pay_bill(meter);
     }
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         new payment_bill("");
-    }
+    }*/
 }

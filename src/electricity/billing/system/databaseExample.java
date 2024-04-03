@@ -7,9 +7,13 @@ public class databaseExample {
     Connection connection;
     Statement statement;
 
+    String database_URL = "";
+    String user_db = "";
+    String pass_db = "";
+
     databaseExample() {
         try {
-            // connection = DriverManager.getConnection("jdbc:mysql://URL_DATABASE", USER_DB, PASSWORD_DB);
+            connection = DriverManager.getConnection(database_URL, user_db, pass_db);
             statement = connection.createStatement();
         } catch (Exception e) {
             e.printStackTrace();
