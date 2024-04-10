@@ -39,6 +39,7 @@ public class update_information extends JFrame implements ActionListener {
 
         JLabel meterText = new JLabel("");
         meterText.setBounds(150, 110, 100, 20);
+        add(meterText);
 
         JLabel address = new JLabel("Address");
         address.setBounds(30, 150, 100, 20);
@@ -82,8 +83,10 @@ public class update_information extends JFrame implements ActionListener {
 
         try {
             database c = new database();
-            ResultSet resultSet = c.statement
-                    .executeQuery("select * from new_customer where meter_no = '" + meter + "'");
+            String query = "SELECT * FROM new_customer WHERE meter_no = ?";
+            PreparedStatement preparedStatement = c.connection.prepareStatement(query);
+            preparedStatement.setString(1, meter);
+            ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 nameText.setText(resultSet.getString("name"));
                 meterText.setText(resultSet.getString("meter_no"));
@@ -133,9 +136,13 @@ public class update_information extends JFrame implements ActionListener {
 
             try {
                 database c = new database();
-                /*c.statement.executeUpdate("update new_customer set address ='" + saddress + "', city = '" + scity
-                        + "', state = '" + sstate + "', email = '" + semail + "', phone_no ='" + sphone
-                        + "' where meter_no = '" + meter + "'");*/
+                /*
+                 * c.statement.executeUpdate("update new_customer set address ='" + saddress +
+                 * "', city = '" + scity
+                 * + "', state = '" + sstate + "', email = '" + semail + "', phone_no ='" +
+                 * sphone
+                 * + "' where meter_no = '" + meter + "'");
+                 */
                 String query = "update new_customer set address = ?, city = ?, state = ?, email = ?, phone_no = ? where meter_no = ?";
                 PreparedStatement co = c.connection.prepareStatement(query);
 
@@ -157,7 +164,9 @@ public class update_information extends JFrame implements ActionListener {
         }
     }
 
-    /*public static void main(String[] args) {
-        new update_information("");
-    }*/
+    /*
+     * public static void main(String[] args) {
+     * new update_information("");
+     * }
+     */
 }

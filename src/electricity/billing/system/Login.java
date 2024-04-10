@@ -80,9 +80,7 @@ public class Login extends JFrame implements ActionListener {
         if (e.getSource() == loginButton) {
             String susername = userText.getText();
             String spassword = String.valueOf(passwordText.getPassword());
-            String hashPasword = BCrypt.withDefaults().hashToString(12, spassword.toCharArray());
             String suser = loginChoice.getSelectedItem();
-
 
             try {
                 database c = new database();
@@ -93,9 +91,10 @@ public class Login extends JFrame implements ActionListener {
                 co.setString(2, suser);
                 ResultSet resultSet = co.executeQuery();
 
-                if(resultSet.next()) {
-                    BCrypt.Result result = BCrypt.verifyer().verify(spassword.toCharArray(), resultSet.getString("password"));
-                    if(result.verified) {
+                if (resultSet.next()) {
+                    BCrypt.Result result = BCrypt.verifyer().verify(spassword.toCharArray(),
+                            resultSet.getString("password"));
+                    if (result.verified) {
                         String meter = resultSet.getString("meter_no");
 
                         setVisible(false);
